@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import "./App.css";
+import Calculator from "./components/Calculator";
+import Layout from "./components/Layout";
+import { ThemeContext } from "./providers/ThemeProvider";
 
 function App() {
+  const { theme, setTheme } = useContext(ThemeContext);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {theme === "ligth" ? (
+        <img
+          onClick={() => setTheme("dark")}
+          src="./moon.png"
+          alt=""
+          className="theme__toggler dark"
+        />
+      ) : (
+        <img
+          onClick={() => setTheme("ligth")}
+          src="./sun.png"
+          alt=""
+          className="theme__toggler light"
+        />
+      )}
+      <Layout>
+        <Calculator />
+      </Layout>
     </div>
   );
 }
