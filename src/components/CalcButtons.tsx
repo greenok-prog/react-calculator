@@ -1,29 +1,21 @@
 import classNames from "classnames";
 import { Dispatch, FC, SetStateAction, useContext } from "react";
 import { ThemeContext } from "../providers/ThemeProvider";
+import { buttons, isNumber, isOperator, math } from "../utils";
 import { IcalcValue } from "./Calculator";
 
 interface CalcButtonsProps {
   setCulcValue: Dispatch<SetStateAction<IcalcValue>>;
   calcValue: IcalcValue;
 }
-const buttons = [
-  ["C", "+/-", "%", "/"],
-  ["7", "8", "9", "*"],
-  ["4", "5", "6", "+"],
-  ["1", "2", "3", "-"],
-  [".", "0", "="],
-];
-const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
-  console.log(calcValue);
 
-  const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  const isNumber = (el: string) => numbers.includes(el);
-  const operators = ["%", "/", "*", "+", "-"];
+const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
   const { theme } = useContext(ThemeContext);
+
   const clearClickHandler = () => {
     setCulcValue({ num: 0, sign: "", res: 0 });
   };
+
   const changeSignHandler = () => {
     setCulcValue({
       ...calcValue,
@@ -31,6 +23,7 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
       res: !calcValue.num && calcValue.res ? -calcValue.res : calcValue.res,
     });
   };
+
   const addDotHandler = (el: any) => {
     setCulcValue({
       ...calcValue,
@@ -39,17 +32,8 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
         : calcValue.num,
     });
   };
+
   const equalClickHandler = () => {
-    const math = (a: number, b: number, sign: string) =>
-      sign === "+"
-        ? a + b
-        : sign === "-"
-        ? a - b
-        : sign === "*"
-        ? a * b
-        : sign === "%"
-        ? a % b
-        : a / b;
     setCulcValue({
       ...calcValue,
       res: 0,
@@ -57,7 +41,8 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
       sign: "",
     });
   };
-  const numsClickHander = (el: any) => {
+
+  const numsClickHander = (el: string) => {
     setCulcValue({
       ...calcValue,
       num:
@@ -65,7 +50,8 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
       res: !calcValue.sign ? 0 : calcValue.res,
     });
   };
-  const signClickHandler = (el: any) => {
+
+  const signClickHandler = (el: string) => {
     setCulcValue({
       ...calcValue,
       num: 0,
@@ -73,6 +59,7 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
       res: !calcValue.res && calcValue.num ? calcValue.num : calcValue.res,
     });
   };
+
   const buttonVariables = (btn: string) => {
     if (
       btn === "/" ||
@@ -103,7 +90,7 @@ const CalcButtons: FC<CalcButtonsProps> = ({ setCulcValue, calcValue }) => {
             equals: el === "=",
             number: isNumber(el),
             "number-dark": isNumber(el) && theme === "dark",
-            operator: operators.includes(el),
+            operator: isOperator(el),
           })}
           key={i}
           onClick={() => buttonVariables(el)}
